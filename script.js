@@ -1109,12 +1109,6 @@ function hideLogin() {
 }
 
 // ========== SERVICE WORKER ==========
-var deferredPrompt = null;
-
-window.addEventListener('beforeinstallprompt', function(e) {
-  deferredPrompt = e;
-});
-
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').then(function(reg) {
     reg.addEventListener('updatefound', function() {
@@ -1133,15 +1127,6 @@ if ('serviceWorker' in navigator) {
     if (refreshing) return;
     refreshing = true;
     window.location.reload();
-  });
-}
-
-function promptInstall() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(function() {
-    deferredPrompt = null;
-    document.getElementById('installBanner').classList.add('hidden');
   });
 }
 
@@ -1173,11 +1158,6 @@ function init() {
         hideLogin();
         switchView('home');
         document.getElementById('bottomNav').style.display = 'flex';
-
-        // Show install banner if available
-        if (deferredPrompt) {
-          document.getElementById('installBanner').classList.remove('hidden');
-        }
 
         // Speak welcome if first time
         if (!welcomeShown) {
@@ -1271,9 +1251,6 @@ function init() {
         });
         document.getElementById('btnConfirmCancel').addEventListener('click', closeConfirm);
         document.getElementById('modalConfirmOverlay').addEventListener('click', closeConfirm);
-
-        // Install button
-        document.getElementById('btnInstall').addEventListener('click', promptInstall);
 
         // Pull to refresh
         initPullToRefresh();
