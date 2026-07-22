@@ -1141,6 +1141,7 @@ function promptInstall() {
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(function() {
     deferredPrompt = null;
+    document.getElementById('installBanner').classList.add('hidden');
   });
 }
 
@@ -1173,9 +1174,9 @@ function init() {
         switchView('home');
         document.getElementById('bottomNav').style.display = 'flex';
 
-        // Show install prompt if available
+        // Show install banner if available
         if (deferredPrompt) {
-          setTimeout(function() { promptInstall(); }, 1000);
+          document.getElementById('installBanner').classList.remove('hidden');
         }
 
         // Speak welcome if first time
@@ -1270,6 +1271,9 @@ function init() {
         });
         document.getElementById('btnConfirmCancel').addEventListener('click', closeConfirm);
         document.getElementById('modalConfirmOverlay').addEventListener('click', closeConfirm);
+
+        // Install button
+        document.getElementById('btnInstall').addEventListener('click', promptInstall);
 
         // Pull to refresh
         initPullToRefresh();
