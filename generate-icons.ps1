@@ -27,19 +27,23 @@ function New-CunaIcon {
   )
   $g.FillPath($brush, $path)
 
-  # Moon crescent
-  $moonColor = [System.Drawing.Color]::FromArgb(255, 255, 255)
-  $moonBrush = New-Object System.Drawing.SolidBrush($moonColor)
-  $moonPath = New-Object System.Drawing.Drawing2D.GraphicsPath
-
-  $m1 = [float]($s * 0.15)
-  $m2 = [float]($s * 0.25)
-  $m3 = [float]($s * 0.55)
-  $m4 = [float]($s * 0.45)
-  $moonPath.AddArc((New-Object System.Drawing.RectangleF($m1, $m1, $m3, $m3)), 180, 180)
-  $moonPath.AddArc((New-Object System.Drawing.RectangleF($m2, $m1, $m4, $m3)), 0, -180)
-  $moonPath.CloseAllFigures()
-  $g.FillPath($moonBrush, $moonPath)
+  # White star (5-pointed)
+  $starColor = [System.Drawing.Color]::FromArgb(255, 255, 255)
+  $starBrush = New-Object System.Drawing.SolidBrush($starColor)
+  $cx = [float]($s / 2)
+  $cy = [float]($s / 2)
+  $R = [float]($s * 0.42)
+  $r = [float]($s * 0.18)
+  $pts = New-Object System.Drawing.PointF[] 10
+  for ($i = 0; $i -lt 5; $i++) {
+    $a1 = [math]::PI * (-90 + $i * 72) / 180
+    $pts[$i * 2].X = [float]($cx + $R * [math]::Cos($a1))
+    $pts[$i * 2].Y = [float]($cy + $R * [math]::Sin($a1))
+    $a2 = [math]::PI * (-54 + $i * 72) / 180
+    $pts[$i * 2 + 1].X = [float]($cx + $r * [math]::Cos($a2))
+    $pts[$i * 2 + 1].Y = [float]($cy + $r * [math]::Sin($a2))
+  }
+  $g.FillPolygon($starBrush, $pts)
 
 
 

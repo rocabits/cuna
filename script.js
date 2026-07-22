@@ -730,7 +730,7 @@ function getCoverSVG(type) {
       return '<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#f0fdf4"/><circle cx="50" cy="60" r="20" fill="white" stroke="#2ecc71" stroke-width="1.5"/><ellipse cx="42" cy="38" rx="8" ry="18" fill="white" stroke="#2ecc71" stroke-width="1.5"/><ellipse cx="58" cy="38" rx="8" ry="18" fill="white" stroke="#2ecc71" stroke-width="1.5"/><circle cx="44" cy="56" r="2" fill="#2d3436"/><circle cx="56" cy="56" r="2" fill="#2d3436"/><ellipse cx="50" cy="62" rx="3" ry="2" fill="white"/><circle cx="38" cy="36" r="3" fill="#f8d7da"/><circle cx="62" cy="36" r="3" fill="#f8d7da"/><path d="M50 48 L50 54" stroke="#2d3436" stroke-width="1.5"/><circle cx="50" cy="46" r="1.5" fill="white"/></svg>';
     case 'moon':
     default:
-      return '<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#f0fdf4"/><path d="M30 20 A35 35 0 1 0 75 82 A35 35 0 0 1 30 20Z" fill="white" stroke="#27ae60" stroke-width="1.5"/><circle cx="20" cy="25" r="2" fill="white" opacity="0.6"/><circle cx="82" cy="55" r="1.5" fill="white" opacity="0.5"/><path d="M20 85 Q50 92 80 85" stroke="#d4f5e0" stroke-width="1.5" fill="none"/></svg>';
+      return '<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#f0fdf4"/><polygon points="50,8 61,36 92,36 67,55 77,87 50,68 23,87 33,55 8,36 39,36" fill="white" stroke="#27ae60" stroke-width="1.5"/></svg>';
   }
 }
 
@@ -748,15 +748,7 @@ function renderHome() {
 
   container.innerHTML =
     '<div class="home-welcome">' +
-      '<div class="home-illustration">' +
-        '<svg viewBox="0 0 200 200" fill="none">' +
-          '<circle cx="100" cy="100" r="90" fill="#f0fdf4"/>' +
-          '<path d="M50 50 A55 55 0 1 0 145 130 A55 55 0 0 1 50 50Z" fill="white" opacity="0.9"/>' +
-          '<circle cx="60" cy="40" r="4" fill="white" opacity="0.6"/>' +
-          '<circle cx="160" cy="80" r="3" fill="white" opacity="0.5"/>' +
-          '<path d="M30 165 Q100 180 170 165" stroke="#d4f5e0" stroke-width="2" fill="none"/>' +
-        '</svg>' +
-      '</div>' +
+
       '<p class="welcome-greeting">' + escapeHtml(greeting) + '</p>' +
       '<p class="welcome-question">\u00BFQu\u00E9 historia quieres compartir esta noche?</p>' +
       '<div class="home-options">' +
@@ -840,7 +832,7 @@ function renderNanas() {
 // ========== RENDER: USERS ==========
 function renderUsuarios() {
   if (!supabaseClient) return;
-  supabaseClient.from('allowed_emails').select('email').eq('app_id', APP_ID).then(function(res) {
+      supabaseClient.from('allowed_emails').select('email').eq('app_id', 'fifty').then(function(res) {
     var total = res.data ? res.data.length : 0;
     document.getElementById('headerTitle').textContent = 'CUNA: Usuarios (' + total + ')';
     var html = '';
@@ -907,7 +899,6 @@ function switchView(view) {
     document.getElementById('viewUsuarios').classList.add('active');
     document.getElementById('bottomNav').style.display = 'none';
     document.getElementById('btnBack').classList.add('visible');
-    document.getElementById('emptyState').classList.add('hidden');
     document.getElementById('fabAdd').style.display = '';
     renderUsuarios();
   }
@@ -1059,7 +1050,7 @@ function saveUsuario() {
   if (!supabaseClient) return;
   var oldEmail = document.getElementById('editUsuarioEmail').value;
   var doInsert = function() {
-    supabaseClient.from('allowed_emails').insert({ app_id: APP_ID, email: email }).then(function(res) {
+    supabaseClient.from('allowed_emails').insert({ app_id: 'fifty', email: email }).then(function(res) {
       if (res.error) {
         showToast('Error al guardar: ' + res.error.message);
       } else {
@@ -1070,7 +1061,7 @@ function saveUsuario() {
     });
   };
   if (oldEmail && oldEmail !== email) {
-    supabaseClient.from('allowed_emails').delete().eq('app_id', APP_ID).eq('email', oldEmail).then(function(res) {
+    supabaseClient.from('allowed_emails').delete().eq('app_id', 'fifty').eq('email', oldEmail).then(function(res) {
       if (res.error) {
         showToast('Error al actualizar');
       } else {
@@ -1084,7 +1075,7 @@ function saveUsuario() {
 
 function removeUsuario(email) {
   showConfirm('\u00BF Eliminar a ' + email + '?', function() {
-    supabaseClient.from('allowed_emails').delete().eq('app_id', APP_ID).eq('email', email).then(function(res) {
+    supabaseClient.from('allowed_emails').delete().eq('app_id', 'fifty').eq('email', email).then(function(res) {
       if (res.error) {
         showToast('Error al eliminar');
       } else {
