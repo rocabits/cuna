@@ -1,12 +1,10 @@
 {
   "name": "CUNA",
   "short_name": "CUNA",
-  "description": "Acompa\u00F1a la rutina de dormir de tus peque\u00F1os con cuentos y nanas narrados por Cuna.",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#f0f2f5",
+  "background_color": "#2ecc71",
   "theme_color": "#2ecc71",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
