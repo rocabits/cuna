@@ -1,4 +1,4 @@
-var CACHE_NAME = 'cuna-v5';
+var CACHE_NAME = 'cuna-v6';
 
 var URLS_TO_CACHE = [
   './',

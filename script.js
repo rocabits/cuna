@@ -1038,6 +1038,8 @@ if ('serviceWorker' in navigator) {
         }
       });
     });
+  }).catch(function(e) {
+    console.error('SW registration failed:', e);
   });
 
   var refreshing = false;
