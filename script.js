@@ -107,12 +107,6 @@ var playerTimer = null;
 var playerProgress = 0;
 var playerTextIndex = 0;
 
-// Pull-to-refresh
-var pullStartY = 0;
-var pullMoveY = 0;
-var pullMax = 80;
-var pullRefreshing = false;
-
 // ========== STORAGE ==========
 function loadData() {
   try {
@@ -904,81 +898,6 @@ function switchView(view) {
   }
 }
 
-// ========== PULL-TO-REFRESH ==========
-function initPullToRefresh() {
-  var mainContent = document.getElementById('mainContent');
-  var indicator = document.getElementById('pullRefreshIndicator');
-  var pullText = document.getElementById('pullText');
-
-  mainContent.addEventListener('touchstart', function(e) {
-    if (mainContent.scrollTop > 0) return;
-    if (pullRefreshing) return;
-    pullStartY = e.touches[0].clientY;
-    pullMoveY = pullStartY;
-  }, { passive: true });
-
-  mainContent.addEventListener('touchmove', function(e) {
-    if (pullRefreshing) return;
-    pullMoveY = e.touches[0].clientY;
-    var diff = pullMoveY - pullStartY;
-
-    if (diff > 0 && mainContent.scrollTop <= 0) {
-      indicator.classList.remove('hidden');
-      var pull = Math.min(diff / pullMax, 1);
-      indicator.style.transform = 'translateY(' + (diff * 0.4) + 'px)';
-      indicator.style.opacity = pull;
-
-      if (diff >= pullMax) {
-        pullText.textContent = 'Suelta para recargar';
-      } else {
-        pullText.textContent = 'Tirar para recargar';
-      }
-    }
-  }, { passive: true });
-
-  mainContent.addEventListener('touchend', function(e) {
-    if (pullRefreshing) return;
-    var diff = pullMoveY - pullStartY;
-
-    indicator.style.transform = '';
-    indicator.style.opacity = '';
-
-    if (diff >= pullMax) {
-      // Trigger refresh
-      pullRefreshing = true;
-      indicator.classList.remove('hidden');
-      indicator.style.transform = 'translateY(0)';
-      pullText.textContent = 'Recargando\u2026';
-      indicator.querySelector('.pull-spinner').style.display = 'block';
-
-      doRefresh().then(function() {
-        pullRefreshing = false;
-        indicator.classList.add('hidden');
-        indicator.querySelector('.pull-spinner').style.display = '';
-        showToast('Contenido actualizado');
-      }).catch(function() {
-        pullRefreshing = false;
-        indicator.classList.add('hidden');
-        indicator.querySelector('.pull-spinner').style.display = '';
-      });
-    } else {
-      indicator.classList.add('hidden');
-    }
-  }, { passive: true });
-}
-
-function doRefresh() {
-  return supabaseLoad().then(function(data) {
-    if (data) {
-      favorites = data.favorites || [];
-      listenHistory = data.listenHistory || [];
-      cacheData(data);
-    }
-    refreshCurrentView();
-    return true;
-  });
-}
-
 function refreshCurrentView() {
   if (currentView === 'home') renderHome();
   else if (currentView === 'cuentos') renderCuentos();
@@ -1252,8 +1171,6 @@ function init() {
         document.getElementById('btnConfirmCancel').addEventListener('click', closeConfirm);
         document.getElementById('modalConfirmOverlay').addEventListener('click', closeConfirm);
 
-        // Pull to refresh
-        initPullToRefresh();
       });
     } else {
       showLogin();
