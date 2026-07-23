@@ -1058,13 +1058,12 @@ function updateSWStatus(msg, color) {
   if (el) { el.textContent = msg; el.style.color = color; }
 }
 
-  var refreshing = false;
-  navigator.serviceWorker.addEventListener('controllerchange', function() {
-    if (refreshing) return;
-    refreshing = true;
-    window.location.reload();
-  });
-}
+var refreshing = false;
+navigator.serviceWorker.addEventListener('controllerchange', function() {
+  if (refreshing) return;
+  refreshing = true;
+  window.location.reload();
+});
 
 // ========== INIT ==========
 function init() {
@@ -1090,18 +1089,6 @@ function init() {
       currentUserEmail = email;
 
       loadAppData().then(function() {
-        // SW diagnostic
-        var swStatus = document.getElementById('swStatus');
-        if (swStatus) {
-          if (navigator.serviceWorker.controller) {
-            swStatus.textContent = 'SW: active';
-            swStatus.style.color = '#0f0';
-          } else {
-            swStatus.textContent = 'SW: none';
-            swStatus.style.color = '#f00';
-          }
-        }
-
         supabaseSubscribe();
         hideLogin();
         switchView('home');

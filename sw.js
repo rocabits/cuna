@@ -1,7 +1,6 @@
-var CACHE_NAME = 'cuna-v6';
+var CACHE_NAME = 'cuna-v7';
 
 var URLS_TO_CACHE = [
-  './',
   './index.html',
   './style.css',
   './script.js',
@@ -16,7 +15,10 @@ self.addEventListener('install', function (event) {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(function (cache) {
-      return cache.addAll(URLS_TO_CACHE);
+      return cache.addAll(URLS_TO_CACHE).catch(function (e) {
+        console.error('SW cache.addAll failed:', e);
+        throw e;
+      });
     })
   );
 });
