@@ -1074,6 +1074,18 @@ function init() {
       currentUserEmail = email;
 
       loadAppData().then(function() {
+        // SW diagnostic
+        var swStatus = document.getElementById('swStatus');
+        if (swStatus) {
+          if (navigator.serviceWorker.controller) {
+            swStatus.textContent = 'SW: active';
+            swStatus.style.color = '#0f0';
+          } else {
+            swStatus.textContent = 'SW: none';
+            swStatus.style.color = '#f00';
+          }
+        }
+
         supabaseSubscribe();
         hideLogin();
         switchView('home');
