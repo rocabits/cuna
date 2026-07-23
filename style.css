@@ -37,38 +37,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ========== INSTALL BANNER ========== */
-.install-banner {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--primary-dark);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: system-ui, -apple-system, sans-serif;
-  z-index: 250;
-  animation: slideUp 0.3s ease;
-}
-.install-banner.hidden {
-  display: none;
-}
-.install-banner button {
-  background: white;
-  color: var(--primary-dark);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 /* ========== LOGIN VIEW ========== */
 .view-login {
   position: fixed;

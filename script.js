@@ -106,8 +106,6 @@ var audioPlaying = false;
 var playerTimer = null;
 var playerProgress = 0;
 var playerTextIndex = 0;
-var deferredPrompt = null;
-
 // ========== STORAGE ==========
 function loadData() {
   try {
@@ -1050,23 +1048,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-window.addEventListener('beforeinstallprompt', function(e) {
-  e.preventDefault();
-  deferredPrompt = e;
-  var banner = document.getElementById('installBanner');
-  if (banner) banner.classList.remove('hidden');
-});
-
-function promptInstall() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(function() {
-    deferredPrompt = null;
-    var banner = document.getElementById('installBanner');
-    if (banner) banner.classList.add('hidden');
-  });
-}
-
 // ========== INIT ==========
 function init() {
   initSupabase();
@@ -1137,9 +1118,6 @@ function init() {
             openUsuarioModal();
           }
         });
-
-        // Install button
-        document.getElementById('btnInstall').addEventListener('click', promptInstall);
 
         // Content card clicks (delegated)
         document.getElementById('cuentosList').addEventListener('click', function(e) {
