@@ -1,8 +1,7 @@
 {
   "name": "CUNA",
   "short_name": "CUNA",
-  "start_url": ".",
-  "scope": "/cuna/",
+  "start_url": "/cuna/",
   "display": "standalone",
   "background_color": "#2ecc71",
   "theme_color": "#2ecc71",
