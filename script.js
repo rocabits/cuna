@@ -1027,11 +1027,16 @@ function hideLogin() {
 }
 
 // ========== SERVICE WORKER ==========
+window.__swStatus = 'waiting';
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').then(function(reg) {
+    window.__swStatus = 'registered';
+    updateSWStatus('SW: reg', '#ff0');
     reg.addEventListener('updatefound', function() {
       var nuevo = reg.installing;
       nuevo.addEventListener('statechange', function() {
+        window.__swStatus = this.state;
+        updateSWStatus('SW: ' + this.state, '#ff0');
         if (this.state === 'installed' && navigator.serviceWorker.controller) {
           showToast('Nueva versi\u00F3n disponible');
           this.postMessage({ action: 'skipWaiting' });
@@ -1039,8 +1044,19 @@ if ('serviceWorker' in navigator) {
       });
     });
   }).catch(function(e) {
+    window.__swStatus = 'error: ' + e.message;
+    updateSWStatus('SW: FAIL ' + e.message, '#f00');
     console.error('SW registration failed:', e);
   });
+} else {
+  window.__swStatus = 'unsupported';
+  updateSWStatus('SW: no', '#f00');
+}
+
+function updateSWStatus(msg, color) {
+  var el = document.getElementById('swStatus');
+  if (el) { el.textContent = msg; el.style.color = color; }
+}
 
   var refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', function() {
