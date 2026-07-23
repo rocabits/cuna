@@ -32,16 +32,18 @@ function New-CunaIcon {
   $starBrush = New-Object System.Drawing.SolidBrush($starColor)
   $cx = [float]($s / 2)
   $cy = [float]($s / 2)
-  $R = [float]($s * 0.42)
-  $r = [float]($s * 0.18)
+  $starOuter = [float]($s * 0.42)
+  $starInner = [float]($s * 0.18)
   $pts = New-Object System.Drawing.PointF[] 10
   for ($i = 0; $i -lt 5; $i++) {
     $a1 = [math]::PI * (-90 + $i * 72) / 180
-    $pts[$i * 2].X = [float]($cx + $R * [math]::Cos($a1))
-    $pts[$i * 2].Y = [float]($cy + $R * [math]::Sin($a1))
     $a2 = [math]::PI * (-54 + $i * 72) / 180
-    $pts[$i * 2 + 1].X = [float]($cx + $r * [math]::Cos($a2))
-    $pts[$i * 2 + 1].Y = [float]($cy + $r * [math]::Sin($a2))
+    $outerX = [float]($cx + $starOuter * [math]::Cos($a1))
+    $outerY = [float]($cy + $starOuter * [math]::Sin($a1))
+    $innerX = [float]($cx + $starInner * [math]::Cos($a2))
+    $innerY = [float]($cy + $starInner * [math]::Sin($a2))
+    $pts[$i * 2] = New-Object System.Drawing.PointF($outerX, $outerY)
+    $pts[$i * 2 + 1] = New-Object System.Drawing.PointF($innerX, $innerY)
   }
   $g.FillPolygon($starBrush, $pts)
 
