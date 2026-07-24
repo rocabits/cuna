@@ -505,7 +505,7 @@ function finishStory() {
       });
     } else {
       setTimeout(function() {
-        switchView('home');
+        switchView('cuentos');
       }, 2000);
     }
   });
@@ -567,7 +567,7 @@ function finishNana() {
   updateProgressBar();
   cunaSpeak(CUNA_VOICE_LINES.farewell, function() {
     setTimeout(function() {
-      switchView('home');
+      switchView('nanas');
     }, 2000);
   });
 }
