@@ -657,11 +657,6 @@ function renderPlayer(content) {
             '<polygon points="6 3 20 12 6 21 6 3"/>' +
           '</svg>' +
         '</button>' +
-        '<button class="player-btn player-btn-secondary" id="btnHome" aria-label="Inicio">' +
-          '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">' +
-            '<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>' +
-          '</svg>' +
-        '</button>' +
       '</div>' +
     '</div>';
 
@@ -669,16 +664,12 @@ function renderPlayer(content) {
   setTimeout(function() {
     var btnPlay = document.getElementById('btnPlayPause');
     var btnStop = document.getElementById('btnStop');
-    var btnHome = document.getElementById('btnHome');
 
     if (btnPlay) btnPlay.addEventListener('click', togglePlayPause);
     if (btnStop) btnStop.addEventListener('click', function() {
       stopAllAudio();
-      switchView('home');
-    });
-    if (btnHome) btnHome.addEventListener('click', function() {
-      stopAllAudio();
-      switchView('home');
+      var target = currentPlaying && currentPlaying.type === 'cuento' ? 'cuentos' : 'nanas';
+      switchView(target);
     });
   }, 50);
 
@@ -1110,7 +1101,8 @@ function init() {
         document.getElementById('btnBack').addEventListener('click', function() {
           if (currentView === 'player') {
             stopAllAudio();
-            switchView('home');
+            var target = currentPlaying && currentPlaying.type === 'cuento' ? 'cuentos' : 'nanas';
+            switchView(target);
           } else if (currentView === 'usuarios') {
             switchView('home');
           }
