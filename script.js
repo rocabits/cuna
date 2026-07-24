@@ -106,6 +106,7 @@ var audioPlaying = false;
 var playerTimer = null;
 var playerProgress = 0;
 var playerTextIndex = 0;
+var nanaTotalDuration = 0;
 // ========== STORAGE ==========
 function loadData() {
   try {
@@ -543,24 +544,23 @@ function startNana(content) {
   renderPlayer(content);
   updatePlayButton();
 
-  var melodyDuration = 0;
   if (content.melody) {
-    melodyDuration = playLullaby(content.melody);
+    playLullaby(content.melody);
   }
 
   cunaSpeak(content.lyrics, function() {
-    // Nana finished
+    finishNana();
   });
 
   // Progress simulation for nana
-  var totalDuration = melodyDuration > 0 ? melodyDuration * 1000 : content.duration * 1000;
+  nanaTotalDuration = content.duration * 1000;
   if (playerTimer) clearTimeout(playerTimer);
   var startTime = Date.now();
   playerTimer = setInterval(function() {
     var elapsed = Date.now() - startTime;
-    playerProgress = Math.min((elapsed / totalDuration) * 100, 100);
+    playerProgress = Math.min((elapsed / nanaTotalDuration) * 100, 100);
     updateProgressBar();
-    if (elapsed >= totalDuration) {
+    if (elapsed >= nanaTotalDuration) {
       clearInterval(playerTimer);
       playerTimer = null;
       isPlaying = false;
@@ -588,6 +588,22 @@ function toggleNanaPlayback() {
     }
     if (currentPlaying && currentPlaying.melody) {
       playLullaby(currentPlaying.melody);
+    }
+    if (nanaTotalDuration > 0 && !playerTimer) {
+      var elapsed = (playerProgress / 100) * nanaTotalDuration;
+      var remaining = nanaTotalDuration - elapsed;
+      var startTime = Date.now();
+      playerTimer = setInterval(function() {
+        var now = Date.now() - startTime;
+        playerProgress = Math.min(((elapsed + now) / nanaTotalDuration) * 100, 100);
+        updateProgressBar();
+        if (now >= remaining) {
+          clearInterval(playerTimer);
+          playerTimer = null;
+          isPlaying = false;
+          finishNana();
+        }
+      }, 200);
     }
   } else {
     isPaused = true;
