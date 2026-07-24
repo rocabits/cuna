@@ -1,24 +1,17 @@
-var CACHE_NAME = 'cuna-v7';
-
-var URLS_TO_CACHE = [
-  './index.html',
-  './style.css',
-  './script.js',
-  './config.js',
-  './manifest.json',
-  './favicon.svg',
-  './icon-192.png',
-  './icon-512.png'
-];
+var CACHE_NAME = 'cuna-v8';
 
 self.addEventListener('install', function (event) {
   self.skipWaiting();
+});
+
+self.addEventListener('activate', function (event) {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(function (cache) {
-      return cache.addAll(URLS_TO_CACHE).catch(function (e) {
-        console.error('SW cache.addAll failed:', e);
-        throw e;
-      });
+    caches.keys().then(function (keys) {
+      return Promise.all(
+        keys.filter(function (k) { return k !== CACHE_NAME; }).map(function (k) { return caches.delete(k); })
+      );
+    }).then(function () {
+      return self.clients.claim();
     })
   );
 });

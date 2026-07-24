@@ -1030,18 +1030,27 @@ function hideLogin() {
 window.__swStatus = 'waiting';
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').then(function(reg) {
-    window.__swStatus = 'registered';
-    updateSWStatus('SW: reg', '#ff0');
+    var info = 'reg';
+    if (reg.active) info += ' active';
+    if (reg.installing) info += ' installing';
+    if (reg.waiting) info += ' waiting';
+    window.__swStatus = info;
+    updateSWStatus('SW: ' + info, '#ff0');
     reg.addEventListener('updatefound', function() {
       var nuevo = reg.installing;
-      nuevo.addEventListener('statechange', function() {
-        window.__swStatus = this.state;
-        updateSWStatus('SW: ' + this.state, '#ff0');
-        if (this.state === 'installed' && navigator.serviceWorker.controller) {
-          showToast('Nueva versi\u00F3n disponible');
-          this.postMessage({ action: 'skipWaiting' });
-        }
-      });
+      if (nuevo) {
+        nuevo.addEventListener('statechange', function() {
+          window.__swStatus = this.state;
+          updateSWStatus('SW: ' + this.state, '#ff0');
+          if (this.state === 'activated') {
+            updateSWStatus('SW: active', '#0f0');
+          }
+          if (this.state === 'installed' && navigator.serviceWorker.controller) {
+            showToast('Nueva versi\u00F3n disponible');
+            this.postMessage({ action: 'skipWaiting' });
+          }
+        });
+      }
     });
   }).catch(function(e) {
     window.__swStatus = 'error: ' + e.message;
