@@ -1027,24 +1027,12 @@ function hideLogin() {
 }
 
 // ========== SERVICE WORKER ==========
-window.__swStatus = 'waiting';
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').then(function(reg) {
-    var info = 'reg';
-    if (reg.active) info += ' active';
-    if (reg.installing) info += ' installing';
-    if (reg.waiting) info += ' waiting';
-    window.__swStatus = info;
-    updateSWStatus('SW: ' + info, '#ff0');
     reg.addEventListener('updatefound', function() {
       var nuevo = reg.installing;
       if (nuevo) {
         nuevo.addEventListener('statechange', function() {
-          window.__swStatus = this.state;
-          updateSWStatus('SW: ' + this.state, '#ff0');
-          if (this.state === 'activated') {
-            updateSWStatus('SW: active', '#0f0');
-          }
           if (this.state === 'installed' && navigator.serviceWorker.controller) {
             showToast('Nueva versi\u00F3n disponible');
             this.postMessage({ action: 'skipWaiting' });
@@ -1053,26 +1041,16 @@ if ('serviceWorker' in navigator) {
       }
     });
   }).catch(function(e) {
-    window.__swStatus = 'error: ' + e.message;
-    updateSWStatus('SW: FAIL ' + e.message, '#f00');
     console.error('SW registration failed:', e);
   });
-} else {
-  window.__swStatus = 'unsupported';
-  updateSWStatus('SW: no', '#f00');
-}
 
-function updateSWStatus(msg, color) {
-  var el = document.getElementById('swStatus');
-  if (el) { el.textContent = msg; el.style.color = color; }
+  var refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
 }
-
-var refreshing = false;
-navigator.serviceWorker.addEventListener('controllerchange', function() {
-  if (refreshing) return;
-  refreshing = true;
-  window.location.reload();
-});
 
 // ========== INIT ==========
 function init() {
