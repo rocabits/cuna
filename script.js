@@ -460,9 +460,9 @@ function speakNextParagraph() {
 
   var duration = Math.max(paragraph.length * 0.07, 3);
   cunaSpeak(paragraph, function() {
-    currentParagraphIndex++;
-    updateProgress();
     if (isPlaying && !isPaused) {
+      currentParagraphIndex++;
+      updateProgress();
       speakNextParagraph();
     }
   });
