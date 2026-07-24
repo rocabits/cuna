@@ -649,9 +649,6 @@ function renderPlayer(content) {
         '</div>' +
       '</div>' +
       '<div class="player-controls">' +
-        '<button class="player-btn player-btn-secondary" id="btnStop" aria-label="Detener">' +
-          '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>' +
-        '</button>' +
         '<button class="player-btn player-btn-play" id="btnPlayPause" aria-label="Reproducir">' +
           '<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" id="playIcon">' +
             '<polygon points="6 3 20 12 6 21 6 3"/>' +
@@ -663,14 +660,8 @@ function renderPlayer(content) {
   // Bind events
   setTimeout(function() {
     var btnPlay = document.getElementById('btnPlayPause');
-    var btnStop = document.getElementById('btnStop');
 
     if (btnPlay) btnPlay.addEventListener('click', togglePlayPause);
-    if (btnStop) btnStop.addEventListener('click', function() {
-      stopAllAudio();
-      var target = currentPlaying && currentPlaying.type === 'cuento' ? 'cuentos' : 'nanas';
-      switchView(target);
-    });
   }, 50);
 
   switchView('player');
