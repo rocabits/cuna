@@ -432,6 +432,7 @@ function startStory(content) {
   playerTextIndex = 0;
 
   renderPlayer(content);
+  updatePlayButton();
 
   // Speak pre-story message
   cunaSpeak(CUNA_VOICE_LINES.preStory, function() {
@@ -533,6 +534,7 @@ function startNana(content) {
   playerProgress = 0;
 
   renderPlayer(content);
+  updatePlayButton();
 
   var melodyDuration = 0;
   if (content.melody) {

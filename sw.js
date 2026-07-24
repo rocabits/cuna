@@ -1,4 +1,4 @@
-var CACHE_NAME = 'cuna-v8';
+var CACHE_NAME = 'cuna-v9';
 
 self.addEventListener('install', function (event) {
   self.skipWaiting();
