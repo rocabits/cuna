@@ -433,6 +433,7 @@ function startStory(content) {
 
   renderPlayer(content);
   updatePlayButton();
+  highlightText(0);
 
   // Speak pre-story message
   cunaSpeak(CUNA_VOICE_LINES.preStory, function() {
@@ -515,13 +516,19 @@ function toggleStoryPlayback() {
   if (!currentPlaying || currentPlaying.type !== 'cuento') return;
   if (isPaused) {
     isPaused = false;
-    if (currentParagraphIndex < storyParagraphs.length) {
+    if (window.speechSynthesis && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    } else if (currentParagraphIndex < storyParagraphs.length) {
       speakNextParagraph();
     }
     updatePlayButton();
   } else {
     isPaused = true;
-    stopSpeech();
+    if (window.speechSynthesis && window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+    } else {
+      stopSpeech();
+    }
     updatePlayButton();
   }
 }
@@ -576,12 +583,19 @@ function toggleNanaPlayback() {
   if (isPaused) {
     isPaused = false;
     updatePlayButton();
-    if (currentPlaying && currentPlaying.type === 'nana') {
-      cunaSpeak(currentPlaying.lyrics);
+    if (window.speechSynthesis && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+    if (currentPlaying && currentPlaying.melody) {
+      playLullaby(currentPlaying.melody);
     }
   } else {
     isPaused = true;
-    stopSpeech();
+    if (window.speechSynthesis && window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+    } else {
+      stopSpeech();
+    }
     stopMusic();
     if (playerTimer) {
       clearInterval(playerTimer);
